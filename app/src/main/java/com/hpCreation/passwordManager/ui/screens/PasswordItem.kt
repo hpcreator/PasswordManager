@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hpCreation.passwordManager.R
 import com.hpCreation.passwordManager.data.Password
+import com.hpCreation.passwordManager.util.decryptPassword
 
 @Composable
 fun PasswordItem(password: Password, onViewClick: (password: Password) -> Unit) {
@@ -59,7 +60,7 @@ fun PasswordItem(password: Password, onViewClick: (password: Password) -> Unit) 
                 )
                 Text(
                     modifier = Modifier.padding(horizontal = 10.dp),
-                    text = "*".repeat(password.password.length),
+                    text = "*".repeat(password.password.decryptPassword().length),
                     style = MaterialTheme.typography.bodyMedium,
                     fontSize = 24.sp,
                     maxLines = 1,

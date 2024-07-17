@@ -35,6 +35,8 @@ import com.hpCreation.passwordManager.ui.screens.HomeScreen
 import com.hpCreation.passwordManager.ui.screens.ViewPasswordItem
 import com.hpCreation.passwordManager.ui.theme.PasswordManagerTheme
 import com.hpCreation.passwordManager.ui.theme.colorPrimary
+import com.hpCreation.passwordManager.util.EncryptionHelper
+import com.hpCreation.passwordManager.util.decryptPassword
 import com.hpCreation.passwordManager.viewmodel.PasswordViewModel
 import com.hpCreation.passwordManager.viewmodel.PasswordViewModelFactory
 
@@ -54,6 +56,7 @@ class MainActivity : ComponentActivity() {
             val viewModel: PasswordViewModel = viewModel(
                 factory = PasswordViewModelFactory(repository)
             )
+            EncryptionHelper.generateSecretKey()
 
             PasswordManagerApp(viewModel)
         }
@@ -90,7 +93,7 @@ fun PasswordManagerApp(viewModel: PasswordViewModel = viewModel()) {
 
                 if (isBottomSheetVisible) {
                     AddEditPasswordSheet(viewModel = viewModel,
-                        password = password,
+                        password = password?.copy(password = password!!.password.decryptPassword()),
                         onDismiss = { viewModel.onDismissAddEditBottomSheet() })
                 }
 

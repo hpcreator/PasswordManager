@@ -34,6 +34,7 @@ import com.hpCreation.passwordManager.R
 import com.hpCreation.passwordManager.data.Password
 import com.hpCreation.passwordManager.ui.theme.colorGray
 import com.hpCreation.passwordManager.ui.theme.lightGray
+import com.hpCreation.passwordManager.util.encryptPassword
 import com.hpCreation.passwordManager.viewmodel.PasswordViewModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -162,7 +163,13 @@ fun AddEditPasswordSheet(
                     colors = ButtonDefaults.buttonColors(containerColor = colorGray),
                     onClick = {
                         if (validateFields()) {
-                            viewModel?.update(password)
+                            viewModel?.update(
+                                password.copy(
+                                    accountType = accountType,
+                                    username = username,
+                                    password = passwordValue.encryptPassword()
+                                )
+                            )
                         }
                     }) {
                     Text(
@@ -183,7 +190,7 @@ fun AddEditPasswordSheet(
                                 Password(
                                     accountType = accountType,
                                     username = username,
-                                    password = passwordValue
+                                    password = passwordValue.encryptPassword()
                                 )
                             )
                         }

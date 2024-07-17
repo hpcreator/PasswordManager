@@ -1,5 +1,6 @@
 package com.hpCreation.passwordManager.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,6 +34,7 @@ import com.hpCreation.passwordManager.ui.theme.colorGray
 import com.hpCreation.passwordManager.ui.theme.colorGray50
 import com.hpCreation.passwordManager.ui.theme.colorPrimary
 import com.hpCreation.passwordManager.ui.theme.colorSecondary
+import com.hpCreation.passwordManager.util.decryptPassword
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -117,7 +119,9 @@ fun ViewPasswordItem(
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(1f),
-                        text = if (showPassword) password.password else "*".repeat(password.password.length),
+                        text = if (showPassword) password.password.decryptPassword() else "*".repeat(
+                            password.password.decryptPassword().length
+                        ),
                         color = colorGray,
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.bodyLarge,
@@ -141,7 +145,10 @@ fun ViewPasswordItem(
                         .padding(horizontal = 5.dp)
                         .weight(1f),
                         colors = ButtonDefaults.buttonColors(containerColor = colorGray),
-                        onClick = { onEdit(password) }) {
+                        onClick = {
+                            Log.e("TAG", "password item is: $password")
+                            onEdit(password)
+                        }) {
                         Text(
                             "Edit",
                             fontSize = 18.sp,
