@@ -12,11 +12,11 @@ interface PasswordDao {
     fun getAllPasswords(): Flow<List<Password>>
 
     @Insert
-    suspend fun insert(password: Password)
+    suspend fun addPassword(password: Password)
 
     @Update
-    suspend fun update(password: Password)
+    suspend fun updatePassword(password: Password)
 
     @Query("DELETE FROM passwords WHERE id = :passwordId")
-    suspend fun delete(passwordId: Int)
+    suspend fun deletePassword(passwordId: Int)
 }

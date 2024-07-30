@@ -4,14 +4,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -22,19 +19,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.hpCreation.passwordManager.R
 import com.hpCreation.passwordManager.data.Password
+import com.hpCreation.passwordManager.ui.components.OutlinePasswordTextbox
+import com.hpCreation.passwordManager.ui.components.OutlinedTextBox
+import com.hpCreation.passwordManager.ui.components.RoundedButton
 import com.hpCreation.passwordManager.ui.theme.colorGray
 import com.hpCreation.passwordManager.ui.theme.lightGray
-import com.hpCreation.passwordManager.util.encryptPassword
 import com.hpCreation.passwordManager.viewmodel.PasswordViewModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -46,7 +42,6 @@ fun AddEditPasswordSheet(
     var accountType by remember { mutableStateOf(password?.accountType?.trim() ?: "") }
     var username by remember { mutableStateOf(password?.username?.trim() ?: "") }
     var passwordValue by remember { mutableStateOf(password?.password?.trim() ?: "") }
-    var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
     var accountTypeError by remember { mutableStateOf(false) }
     var usernameError by remember { mutableStateOf(false) }
@@ -87,75 +82,46 @@ fun AddEditPasswordSheet(
         Column(
             modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            OutlinedTextField(modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 5.dp),
+            OutlinedTextBox(
                 value = accountType,
                 onValueChange = {
                     accountType = it
                     accountTypeError = accountType.isBlank()
                 },
-                label = { Text("Account Type") },
+                label = "Account Type",
+                maxLines = 1,
+                singleLine = true,
                 isError = accountTypeError,
-                supportingText = {
-                    if (accountTypeError) {
-                        Text(
-                            text = "Account Type is required",
-                            color = MaterialTheme.colorScheme.error,
-                            style = MaterialTheme.typography.bodySmall,
-                            modifier = Modifier.padding(horizontal = 5.dp)
-                        )
-                    }
-                })
-            OutlinedTextField(modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 5.dp),
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text),
+                helperText = if (accountTypeError) "Account Type is required" else null
+            )
+
+            OutlinedTextBox(
                 value = username,
                 onValueChange = {
                     username = it
                     usernameError = username.isBlank()
                 },
-                label = { Text("Username") },
+                label = "Username",
+                maxLines = 1,
+                singleLine = true,
                 isError = usernameError,
-                supportingText = {
-                    if (usernameError) {
-                        Text(
-                            text = "Username is required",
-                            color = MaterialTheme.colorScheme.error,
-                            style = MaterialTheme.typography.bodySmall,
-                            modifier = Modifier.padding(horizontal = 5.dp)
-                        )
-                    }
-                })
-            OutlinedTextField(modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 5.dp, end = 5.dp, bottom = 10.dp),
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text),
+                helperText = if (accountTypeError) "Username is required" else null
+            )
+
+            OutlinePasswordTextbox(
                 value = passwordValue,
                 onValueChange = {
                     passwordValue = it
                     passwordValueError = passwordValue.isBlank()
                 },
-                label = { Text("Password") },
+                label = "Password",
+                singleLine = true,
+                maxLines = 1,
                 isError = passwordValueError,
-                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                supportingText = {
-                    if (passwordValueError) {
-                        Text(
-                            text = "Password is required",
-                            color = MaterialTheme.colorScheme.error,
-                            style = MaterialTheme.typography.bodySmall,
-                            modifier = Modifier.padding(horizontal = 5.dp)
-                        )
-                    }
-                },
-                trailingIcon = {
-                    val image = if (passwordVisible) R.drawable.ic_show
-                    else R.drawable.ic_hide
-                    val description = if (passwordVisible) "Hide password" else "Show password"
-                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                        Icon(painter = painterResource(image), description)
-                    }
-                })
+                helperText = if (passwordValueError) "Password is required" else null
+            )
             if (password != null) {
                 Button(modifier = Modifier
                     .fillMaxWidth()
@@ -163,11 +129,11 @@ fun AddEditPasswordSheet(
                     colors = ButtonDefaults.buttonColors(containerColor = colorGray),
                     onClick = {
                         if (validateFields()) {
-                            viewModel?.update(
+                            viewModel?.updatePassword(
                                 password.copy(
                                     accountType = accountType,
                                     username = username,
-                                    password = passwordValue.encryptPassword()
+                                    password = viewModel.encrypt(passwordValue)
                                 )
                             )
                         }
@@ -180,28 +146,17 @@ fun AddEditPasswordSheet(
                     )
                 }
             } else {
-                Button(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 5.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = colorGray),
-                    onClick = {
-                        if (validateFields()) {
-                            viewModel?.insert(
-                                Password(
-                                    accountType = accountType,
-                                    username = username,
-                                    password = passwordValue.encryptPassword()
-                                )
+                RoundedButton(text = "Add new Account", onClick = {
+                    if (validateFields()) {
+                        viewModel?.addPassword(
+                            Password(
+                                accountType = accountType,
+                                username = username,
+                                password = viewModel.encrypt(passwordValue)
                             )
-                        }
-                    }) {
-                    Text(
-                        "Add new Account",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        modifier = Modifier.padding(5.dp)
-                    )
-                }
+                        )
+                    }
+                }, buttonColor = colorGray)
             }
         }
     }

@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,14 +25,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.hpCreation.passwordManager.R
 import com.hpCreation.passwordManager.data.Password
+import com.hpCreation.passwordManager.ui.components.OutlineButton
+import com.hpCreation.passwordManager.ui.components.RoundedButton
 import com.hpCreation.passwordManager.ui.theme.colorGray
 import com.hpCreation.passwordManager.ui.theme.colorGray50
 import com.hpCreation.passwordManager.ui.theme.colorPrimary
-import com.hpCreation.passwordManager.ui.theme.colorSecondary
-import com.hpCreation.passwordManager.util.decryptPassword
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -115,12 +112,13 @@ fun ViewPasswordItem(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
+                    val pass = password.password
                     Text(
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(1f),
-                        text = if (showPassword) password.password.decryptPassword() else "*".repeat(
-                            password.password.decryptPassword().length
+                        text = if (showPassword) pass else "*".repeat(
+                            pass.length
                         ),
                         color = colorGray,
                         fontWeight = FontWeight.Bold,
@@ -140,37 +138,17 @@ fun ViewPasswordItem(
                         .padding(vertical = 20.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Button(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 5.dp)
-                        .weight(1f),
-                        colors = ButtonDefaults.buttonColors(containerColor = colorGray),
-                        onClick = {
-                            Log.e("TAG", "password item is: $password")
-                            onEdit(password)
-                        }) {
-                        Text(
-                            "Edit",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.ExtraBold,
-                            modifier = Modifier.padding(5.dp)
-                        )
-                    }
+                    OutlineButton(modifier = Modifier.weight(1f), text = "Edit", onClick = {
+                        Log.e("TAG", "password item is: $password")
+                        onEdit(password)
+                    }, borderColor = colorPrimary)
 
-                    Button(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 5.dp)
-                        .weight(1f),
-                        colors = ButtonDefaults.buttonColors(containerColor = colorSecondary),
-                        onClick = { onDelete(password) }) {
-                        Text(
-                            "Delete",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.ExtraBold,
-                            modifier = Modifier.padding(5.dp)
-                        )
-                    }
-
+                    RoundedButton(
+                        modifier = Modifier.weight(1f),
+                        text = "Delete",
+                        onClick = { onDelete(password) },
+                        buttonColor = colorGray
+                    )
                 }
             }
         }

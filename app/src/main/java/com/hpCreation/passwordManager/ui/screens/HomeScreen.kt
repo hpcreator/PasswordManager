@@ -8,8 +8,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -17,14 +15,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hpCreation.passwordManager.data.Password
 import com.hpCreation.passwordManager.ui.theme.colorBackground
-import com.hpCreation.passwordManager.viewmodel.PasswordViewModel
 
 @Composable
 fun HomeScreen(
-    viewModel: PasswordViewModel, onView: (password: Password) -> Unit
+    passwordList: List<Password>, onView: (password: Password) -> Unit
 ) {
 
-    val passwordList by viewModel.allPasswords.collectAsState()
+    //val passwordList by viewModel.allPasswords.collectAsState()
 
     if (passwordList.isEmpty()) {
         Box(
