@@ -1,5 +1,7 @@
 package com.hpCreation.passwordManager.ui.screens
 
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,6 +10,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -29,8 +32,6 @@ import com.hpCreation.passwordManager.data.Password
 import com.hpCreation.passwordManager.ui.components.OutlinePasswordTextbox
 import com.hpCreation.passwordManager.ui.components.OutlinedTextBox
 import com.hpCreation.passwordManager.ui.components.RoundedButton
-import com.hpCreation.passwordManager.ui.theme.colorGray
-import com.hpCreation.passwordManager.ui.theme.lightGray
 import com.hpCreation.passwordManager.viewmodel.PasswordViewModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -75,10 +76,12 @@ fun AddEditPasswordSheet(
         return !accountTypeError && !usernameError && !passwordValueError
     }
 
-    ModalBottomSheet(containerColor = lightGray, sheetState = bottomSheetState, onDismissRequest = {
-        openBottomSheet = false
-        onDismiss()
-    }) {
+    ModalBottomSheet(containerColor = MaterialTheme.colorScheme.surfaceContainer,
+        sheetState = bottomSheetState,
+        onDismissRequest = {
+            openBottomSheet = false
+            onDismiss()
+        }) {
         Column(
             modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -126,7 +129,7 @@ fun AddEditPasswordSheet(
                 Button(modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 5.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = colorGray),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
                     onClick = {
                         if (validateFields()) {
                             viewModel?.updatePassword(
@@ -156,13 +159,14 @@ fun AddEditPasswordSheet(
                             )
                         )
                     }
-                }, buttonColor = colorGray)
+                }, buttonColor = MaterialTheme.colorScheme.secondary)
             }
         }
     }
 }
 
-@Preview(name = "AddEditPassword", showBackground = true)
+@Preview(showSystemUi = true, showBackground = true, name = "lightUi", uiMode = UI_MODE_NIGHT_NO)
+@Preview(showSystemUi = true, showBackground = true, name = "darkUi", uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun DefaultPreview() {
     AddEditPasswordSheet(viewModel = viewModel(), password = Password(

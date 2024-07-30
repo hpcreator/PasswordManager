@@ -1,5 +1,7 @@
 package com.hpCreation.passwordManager.ui.screens
 
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -17,9 +19,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hpCreation.passwordManager.R
@@ -35,7 +37,7 @@ fun PasswordItem(password: Password, onViewClick: (password: Password) -> Unit) 
                 onViewClick(password)
             },
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(10.dp)
     ) {
         Row(
@@ -55,7 +57,8 @@ fun PasswordItem(password: Password, onViewClick: (password: Password) -> Unit) 
                     modifier = Modifier.widthIn(min = 0.dp, max = 200.dp),
                     text = password.accountType,
                     style = MaterialTheme.typography.bodyLarge,
-                    fontSize = 24.sp
+                    fontSize = 24.sp,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     modifier = Modifier.padding(horizontal = 10.dp),
@@ -63,15 +66,29 @@ fun PasswordItem(password: Password, onViewClick: (password: Password) -> Unit) 
                     style = MaterialTheme.typography.bodyMedium,
                     fontSize = 24.sp,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
 
             }
             IconButton(onClick = { onViewClick(password) }) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_right), contentDescription = "View"
+                    painter = painterResource(id = R.drawable.ic_right),
+                    contentDescription = "View",
+                    tint = MaterialTheme.colorScheme.onSurface
                 )
             }
         }
     }
+}
+
+@Preview(showSystemUi = true, uiMode = UI_MODE_NIGHT_NO, name = "LightPreview")
+@Preview(showSystemUi = true, uiMode = UI_MODE_NIGHT_YES, name = "DarkPreview")
+@Composable
+private fun PreviewPasswordItem() {
+    PasswordItem(
+        password = Password(
+            username = "harsh Patel", password = "Harsh@123", accountType = "Google"
+        )
+    ) {}
 }

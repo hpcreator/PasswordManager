@@ -1,5 +1,7 @@
 package com.hpCreation.passwordManager.ui.screens
 
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,9 +31,6 @@ import com.hpCreation.passwordManager.R
 import com.hpCreation.passwordManager.data.Password
 import com.hpCreation.passwordManager.ui.components.OutlineButton
 import com.hpCreation.passwordManager.ui.components.RoundedButton
-import com.hpCreation.passwordManager.ui.theme.colorGray
-import com.hpCreation.passwordManager.ui.theme.colorGray50
-import com.hpCreation.passwordManager.ui.theme.colorPrimary
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,7 +67,7 @@ fun ViewPasswordItem(
             Text(
                 text = "Account Details",
                 style = MaterialTheme.typography.headlineMedium,
-                color = colorPrimary,
+                color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -78,13 +77,13 @@ fun ViewPasswordItem(
                 Text(
                     modifier = Modifier.padding(top = 20.dp, bottom = 10.dp),
                     text = "Account Type",
-                    color = colorGray50,
+                    color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.labelMedium
                 )
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = it.accountType,
-                    color = colorGray,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.bodyLarge
                 )
@@ -92,20 +91,20 @@ fun ViewPasswordItem(
                 Text(
                     modifier = Modifier.padding(top = 20.dp, bottom = 10.dp),
                     text = "Username/Email",
-                    color = colorGray50,
+                    color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.labelMedium
                 )
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = it.username,
-                    color = colorGray,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
                     modifier = Modifier.padding(top = 20.dp, bottom = 10.dp),
                     text = "Password",
-                    color = colorGray50,
+                    color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.labelMedium
                 )
                 Row(
@@ -120,7 +119,7 @@ fun ViewPasswordItem(
                         text = if (showPassword) pass else "*".repeat(
                             pass.length
                         ),
-                        color = colorGray,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.bodyLarge,
                     )
@@ -141,13 +140,13 @@ fun ViewPasswordItem(
                     OutlineButton(modifier = Modifier.weight(1f), text = "Edit", onClick = {
                         Log.e("TAG", "password item is: $password")
                         onEdit(password)
-                    }, borderColor = colorPrimary)
+                    }, borderColor = MaterialTheme.colorScheme.primary)
 
                     RoundedButton(
                         modifier = Modifier.weight(1f),
                         text = "Delete",
                         onClick = { onDelete(password) },
-                        buttonColor = colorGray
+                        buttonColor = MaterialTheme.colorScheme.onSurface
                     )
                 }
             }
@@ -156,7 +155,8 @@ fun ViewPasswordItem(
 }
 
 
-@Preview(showSystemUi = true, showBackground = true)
+@Preview(showSystemUi = true, showBackground = true, name = "lightUi", uiMode = UI_MODE_NIGHT_NO)
+@Preview(showSystemUi = true, showBackground = true, name = "darkUi", uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun ViewPasswordPreview() {
     ViewPasswordItem(password = Password(
