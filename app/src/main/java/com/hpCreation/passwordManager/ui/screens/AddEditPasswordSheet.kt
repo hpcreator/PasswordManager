@@ -4,15 +4,10 @@ import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,13 +17,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hpCreation.passwordManager.data.Password
+import com.hpCreation.passwordManager.ui.components.OutlineButton
 import com.hpCreation.passwordManager.ui.components.OutlinePasswordTextbox
 import com.hpCreation.passwordManager.ui.components.OutlinedTextBox
 import com.hpCreation.passwordManager.ui.components.RoundedButton
@@ -76,12 +70,10 @@ fun AddEditPasswordSheet(
         return !accountTypeError && !usernameError && !passwordValueError
     }
 
-    ModalBottomSheet(containerColor = MaterialTheme.colorScheme.surfaceContainer,
-        sheetState = bottomSheetState,
-        onDismissRequest = {
-            openBottomSheet = false
-            onDismiss()
-        }) {
+    ModalBottomSheet(sheetState = bottomSheetState, onDismissRequest = {
+        openBottomSheet = false
+        onDismiss()
+    }) {
         Column(
             modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -126,28 +118,17 @@ fun AddEditPasswordSheet(
                 helperText = if (passwordValueError) "Password is required" else null
             )
             if (password != null) {
-                Button(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 5.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
-                    onClick = {
-                        if (validateFields()) {
-                            viewModel?.updatePassword(
-                                password.copy(
-                                    accountType = accountType,
-                                    username = username,
-                                    password = viewModel.encrypt(passwordValue)
-                                )
+                OutlineButton(text = "Update Account", onClick = {
+                    if (validateFields()) {
+                        viewModel?.updatePassword(
+                            password.copy(
+                                accountType = accountType,
+                                username = username,
+                                password = viewModel.encrypt(passwordValue)
                             )
-                        }
-                    }) {
-                    Text(
-                        "Update Account",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        modifier = Modifier.padding(5.dp)
-                    )
-                }
+                        )
+                    }
+                })
             } else {
                 RoundedButton(text = "Add new Account", onClick = {
                     if (validateFields()) {
@@ -159,7 +140,7 @@ fun AddEditPasswordSheet(
                             )
                         )
                     }
-                }, buttonColor = MaterialTheme.colorScheme.secondary)
+                })
             }
         }
     }

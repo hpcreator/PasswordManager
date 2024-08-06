@@ -2,7 +2,6 @@ package com.hpCreation.passwordManager.ui.screens
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -77,13 +77,11 @@ fun ViewPasswordItem(
                 Text(
                     modifier = Modifier.padding(top = 20.dp, bottom = 10.dp),
                     text = "Account Type",
-                    color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.labelMedium
                 )
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = it.accountType,
-                    color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.bodyLarge
                 )
@@ -91,25 +89,23 @@ fun ViewPasswordItem(
                 Text(
                     modifier = Modifier.padding(top = 20.dp, bottom = 10.dp),
                     text = "Username/Email",
-                    color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.labelMedium
                 )
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = it.username,
-                    color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
-                    modifier = Modifier.padding(top = 20.dp, bottom = 10.dp),
+                    modifier = Modifier.padding(top = 20.dp, bottom = 0.dp),
                     text = "Password",
-                    color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.labelMedium
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     val pass = password.password
                     Text(
@@ -119,7 +115,7 @@ fun ViewPasswordItem(
                         text = if (showPassword) pass else "*".repeat(
                             pass.length
                         ),
-                        color = MaterialTheme.colorScheme.onSurface,
+
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.bodyLarge,
                     )
@@ -138,15 +134,13 @@ fun ViewPasswordItem(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     OutlineButton(modifier = Modifier.weight(1f), text = "Edit", onClick = {
-                        Log.e("TAG", "password item is: $password")
                         onEdit(password)
-                    }, borderColor = MaterialTheme.colorScheme.primary)
+                    })
 
                     RoundedButton(
                         modifier = Modifier.weight(1f),
                         text = "Delete",
                         onClick = { onDelete(password) },
-                        buttonColor = MaterialTheme.colorScheme.onSurface
                     )
                 }
             }

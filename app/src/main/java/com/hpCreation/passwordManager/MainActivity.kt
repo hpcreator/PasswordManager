@@ -1,9 +1,12 @@
 package com.hpCreation.passwordManager
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricPrompt
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -20,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,10 +31,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.zIndex
+import androidx.core.content.ContextCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.hpCreation.passwordManager.data.Password
 import com.hpCreation.passwordManager.ui.screens.AddEditPasswordSheet
@@ -41,15 +46,55 @@ import com.hpCreation.passwordManager.viewmodel.PasswordViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
-
-
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen()
         enableEdgeToEdge()
         setContent {
+            /*val isAuthenticated = remember { mutableStateOf(false) }
+            if (isAuthenticated.value) {
+                PasswordManagerApp()
+            } else {
+                authenticateFingerprint(isAuthenticated)
+            }*/
             PasswordManagerApp()
         }
+    }
+
+    private fun authenticateFingerprint(isSuccess: MutableState<Boolean>) {
+        val executor = ContextCompat.getMainExecutor(this)
+        val biometricPrompt =
+            BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    super.onAuthenticationError(errorCode, errString)
+                    Toast.makeText(this@MainActivity, errString.toString(), Toast.LENGTH_SHORT)
+                        .show()
+                }
+
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    super.onAuthenticationSucceeded(result)
+                    isSuccess.value = true
+                }
+
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    Toast.makeText(this@MainActivity, "Fails......", Toast.LENGTH_SHORT).show()
+                }
+            })
+
+        val promptForBiometricOnly =
+            BiometricPrompt.PromptInfo.Builder().setTitle("Unlock Sample App")
+                .setDescription("Use your fingerprint to continue")
+                .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_STRONG)
+                .setNegativeButtonText("Enter App PIN").build()
+
+        val promptForBiometricOrCredential =
+            BiometricPrompt.PromptInfo.Builder().setTitle("Unlock Sample App")
+                .setDescription("Confirm your phone screen lock pattern, PIN or password to continue.")
+                .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL)
+                .build()
+        biometricPrompt.authenticate(promptForBiometricOrCredential)
     }
 }
 
@@ -79,7 +124,7 @@ fun PasswordManagerApp() {
                 password = null
                 viewModel.onShowAddEditBottomSheet()
             }) {
-                Icon(Icons.Filled.Add, contentDescription = "Add Password", tint = Color.White)
+                Icon(Icons.Filled.Add, contentDescription = "Add Password")
             }
 
         }) { innerPadding ->

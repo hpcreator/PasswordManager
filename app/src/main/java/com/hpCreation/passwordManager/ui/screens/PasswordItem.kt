@@ -5,7 +5,6 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
@@ -37,7 +36,6 @@ fun PasswordItem(password: Password, onViewClick: (password: Password) -> Unit) 
                 onViewClick(password)
             },
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(10.dp)
     ) {
         Row(
@@ -48,17 +46,13 @@ fun PasswordItem(password: Password, onViewClick: (password: Password) -> Unit) 
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(1f)
-                    .align(Alignment.CenterVertically),
+                modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     modifier = Modifier.widthIn(min = 0.dp, max = 200.dp),
                     text = password.accountType,
                     style = MaterialTheme.typography.bodyLarge,
                     fontSize = 24.sp,
-                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     modifier = Modifier.padding(horizontal = 10.dp),
@@ -67,7 +61,6 @@ fun PasswordItem(password: Password, onViewClick: (password: Password) -> Unit) 
                     fontSize = 24.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.onSurface
                 )
 
             }
@@ -75,15 +68,18 @@ fun PasswordItem(password: Password, onViewClick: (password: Password) -> Unit) 
                 Icon(
                     painter = painterResource(id = R.drawable.ic_right),
                     contentDescription = "View",
-                    tint = MaterialTheme.colorScheme.onSurface
                 )
             }
         }
     }
 }
 
-@Preview(showSystemUi = true, uiMode = UI_MODE_NIGHT_NO, name = "LightPreview")
-@Preview(showSystemUi = true, uiMode = UI_MODE_NIGHT_YES, name = "DarkPreview")
+@Preview(
+    showSystemUi = false, showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "LightPreview"
+)
+@Preview(
+    showSystemUi = false, showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DarkPreview"
+)
 @Composable
 private fun PreviewPasswordItem() {
     PasswordItem(

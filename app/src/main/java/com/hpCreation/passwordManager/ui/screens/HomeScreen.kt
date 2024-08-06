@@ -5,6 +5,8 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
@@ -14,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.hpCreation.passwordManager.data.Password
 
 @Composable
@@ -23,18 +26,24 @@ fun HomeScreen(
     if (passwordList.isEmpty()) {
         Box(
             modifier = Modifier
-                .fillMaxSize()
-                .background(color = MaterialTheme.colorScheme.background),
+                .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
             Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 15.dp),
                 textAlign = TextAlign.Center,
-                text = "No Records found.\nPlease add new recode by clicking + button !",
+                text = "No Records found.\nPlease add new recode by clicking + button.",
                 style = MaterialTheme.typography.bodyLarge
             )
         }
     } else {
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(vertical = 10.dp)
+        ) {
             items(passwordList) { password ->
                 PasswordItem(password = password, onViewClick = { onView(password) })
             }
