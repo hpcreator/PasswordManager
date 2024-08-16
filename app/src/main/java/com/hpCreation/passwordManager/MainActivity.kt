@@ -52,12 +52,12 @@ class MainActivity : AppCompatActivity() {
         installSplashScreen()
         enableEdgeToEdge()
         setContent {
-            /*val isAuthenticated = remember { mutableStateOf(false) }
+            val isAuthenticated = remember { mutableStateOf(false) }
             if (isAuthenticated.value) {
                 PasswordManagerApp()
             } else {
                 authenticateFingerprint(isAuthenticated)
-            }*/
+            }
             PasswordManagerApp()
         }
     }
@@ -82,13 +82,6 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this@MainActivity, "Fails......", Toast.LENGTH_SHORT).show()
                 }
             })
-
-        val promptForBiometricOnly =
-            BiometricPrompt.PromptInfo.Builder().setTitle("Unlock Sample App")
-                .setDescription("Use your fingerprint to continue")
-                .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_STRONG)
-                .setNegativeButtonText("Enter App PIN").build()
-
         val promptForBiometricOrCredential =
             BiometricPrompt.PromptInfo.Builder().setTitle("Unlock Sample App")
                 .setDescription("Confirm your phone screen lock pattern, PIN or password to continue.")

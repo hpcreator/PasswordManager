@@ -34,9 +34,7 @@ fun PasswordItem(password: Password, onViewClick: (password: Password) -> Unit) 
             .padding(vertical = 8.dp, horizontal = 16.dp)
             .clickable {
                 onViewClick(password)
-            },
-        shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.cardElevation(10.dp)
+            }, shape = RoundedCornerShape(20.dp), elevation = CardDefaults.cardElevation(10.dp)
     ) {
         Row(
             modifier = Modifier
