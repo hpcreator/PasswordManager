@@ -2,17 +2,18 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.hilt.android)
+    alias(libs.plugins.compose.compiler)
     kotlin("kapt")
 }
 
 android {
     namespace = "com.hpCreation.passwordManager"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.hpCreation.passwordManager"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 3
         versionName = "1.2"
 
