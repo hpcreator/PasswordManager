@@ -20,7 +20,7 @@ import com.hpCreation.passwordManager.data.Password
 
 @Composable
 fun HomeScreen(
-    passwordList: List<Password>, onView: (password: Password) -> Unit
+    passwordList: List<Password>, onView: (Password) -> Unit
 ) {
     if (passwordList.isEmpty()) {
         Box(
@@ -48,11 +48,8 @@ fun HomeScreen(
     }
 }
 
-/*@Preview(showSystemUi = true, uiMode = UI_MODE_NIGHT_NO, name = "LightPreview")
-@Preview(showSystemUi = true, uiMode = UI_MODE_NIGHT_YES, name = "DarkPreview")*/
-@Preview(showSystemUi = true, uiMode = UI_MODE_NIGHT_YES, name = "Tablet view",
-    device = "spec:width=2560px,height=1600px,dpi=320,navigation=buttons"
-)
+@Preview(showSystemUi = true, uiMode = UI_MODE_NIGHT_NO, name = "LightPreview")
+@Preview(showSystemUi = true, uiMode = UI_MODE_NIGHT_YES, name = "DarkPreview")
 @Composable
 fun HomePreview() {
     HomeScreen(listOf()) {}
